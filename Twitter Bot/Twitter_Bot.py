@@ -18,7 +18,8 @@ dark_sky_key = 'bd1b01bc32d2186a8104d35667f84e8b'
 
 
 
-# Set up the schedule bitch
+# Should be all done
+# Make the tweets more complex
 nampa = forecast(dark_sky_key, 43.5407, -116.5635)
 def weatherCheck():
     nampa.refresh
@@ -27,7 +28,7 @@ def weatherCheck():
         if (hour.precipProbability == 0):
             hourlyRainReport.append('No')
         elif (hour.precipProbability <= 40):
-            hourlyRainReport.append('Probably Not')
+            hourlyRainReport.append('Probably Not')  
         elif (hour.precipProbability <= 60):
             hourlyRainReport.append('Maybe')
         elif (hour.precipProbability <= 95):
@@ -43,13 +44,20 @@ def buildTweet(report):
         return 'Probably'
     elif (report.count('Maybe') > 0):
         return 'Maybe'
-    elif (report.count('Probably Not')):
+    elif (report.count('Probably Not') > 0):
         return 'Probably not'
     else:
         return 'No'
 
 def dailyTweet():
-    # tp.postupdate(buildTweet())
-    print(buildTweet(weatherCheck()))
+    tp.postupdate(buildTweet(weatherCheck()))
+    print("It's 5 am")
+    
+schedule.every().day.at("5:00").do(dailyTweet)
 
-dailyTweet()
+while True:
+    schedule.run_pending()
+    time.sleep(1)
+    print("It's not yet 5 am")
+
+
